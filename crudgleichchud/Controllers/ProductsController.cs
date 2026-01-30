@@ -10,17 +10,63 @@ namespace crudgleichchud.Controllers
         public ProductsController(AppDbContext context)
         {
             _context = context;
-            _context.Products.Add(new Product() { Name = "Teuflo", Price=10});
-            _context.Products.Add(new Product() { Name = "Spendelgoon", Price =5});
-            _context.Products.Add(new Product() { Name = "Johannson", Price = 1000000 });
-            _context.Products.Add(new Product() { Name = "Grottenulm ullibulli", Price = 0 });
-            _context.SaveChanges();
+
         }
 
         public IActionResult Index()
         {
             List<Product> products = _context.Products.ToList();
             return View(products);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Products.Add(product);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(product);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            Product? product = _context.Products.Find(id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return NotFound();
+        }
+
+        public IActionResult Edit(int id)
+        {
+            Product? product = _context.Products.Find(id);
+            if (product != null)
+            {
+                return View(product);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Products.Update(product);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(product);
         }
     }
 }

@@ -5,6 +5,7 @@
 }
 @model List<Product>
 <h1> Produkt-Tabelle</h1>
+<a asp-controller="Products" class="btn btn-warning" asp-action="Create">Create new Product</a>
 
 <table class="table">
     <tr>
@@ -12,6 +13,7 @@
         <th>ID</th>
         <th>Name</th>
         <th>Price</th>
+        <th>Actions</th>
             
     </tr>
     @foreach (Product product in Model)
@@ -20,6 +22,9 @@
             <td>@product.Id</td>
             <td>@product.Name</td>
             <td>@product.Price</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@product.Id"  class="btn btn-primary">Edit</a>
+                <a asp-action="Delete" asp-route-id="@product.Id" onclick="return confirm('Delete @product.Name?');" class="btn btn-danger">Delete</a>
         </tr>
     }
 </table>
